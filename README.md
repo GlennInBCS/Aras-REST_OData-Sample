@@ -7,7 +7,12 @@
 1. 裡面示範了用js以**REST**( `POST` )方式做身分驗證取得登入Token
    ```js
             //POST的Body參數
-            let data = ["grant_type=password", "scope=Innovator", "client_id=IOMApp", "username=登入帳號", "password=登入密碼", "database=登入DB"];
+            let data = ["grant_type=password", 
+                        "scope=Innovator", 
+                        "client_id=IOMApp", 
+                        "username=登入帳號", 
+                        "password=登入密碼", 
+                        "database=登入DB"];
             ...
             //這裡示範把Token塞到window以便後面取用(Production別這樣用...拜託...)
             window.arasToken = res.access_token;
