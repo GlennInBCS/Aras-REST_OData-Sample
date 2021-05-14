@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    URL: <input type="text" name="aras_url" id="aras_url" style="width:80%"value="http://bcoap01/129/oauthserver/connect/token" /> <br/> <br/>
+    Name: <input type="text" name="aras_login_name" id="aras_login_name" style="width:80%" value="admin"/> <br/> <br/>
+    Passwork: <input type="password" name="aras_login_password" id="aras_login_password" style="width:80%" value="innovator"/> <br/> <br/>
+    
+    <button id="connect">Connect</button> 
+    <hr/>
+    URL: <input type="text" name="query_sync" id="query_sync" style="width:80%"value="http://bcoap01/129/server/odata/ItemType?$select=name&$filter=name eq 'Access'"/> <br/> <br/>
+    <button id="query">Query</button>
+    <hr/>
+    <textarea name="query_result" id="query_result" cols="200" rows="100" style="width:80%"> </textarea>
+
+    <script>
+        var resTextAres = document.getElementById("query_result");
+        document.getElementById("connect").addEventListener("click", (e) => {
+            let data = ["grant_type=password", "scope=Innovator", "client_id=IOMApp", "username=admin", "password=607920b64fe136f9ab2389e371852af2", "database=OOTB-129"];
+            const params = data.join("&");
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", document.getElementById("aras_url").value);
+            xhr.onreadystatechange = () => {
+                if(xhr.readyState == 4 && xhr.status == 200) {
+                    resTextAres.value = xhr.responseText;
+                    const res = JSON.parse(xhr.responseText);
+                    window.arasToken = res.access_token;
+                }
+            };
+            xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xhr.send(params);
+        });
+
+        document.getElementById("query").addEventListener("click", () => {
+            let xhr = new XMLHttpRequest();
+            xhr.open("GET", document.getElementById("query_sync").value);
+            xhr.onreadystatechange = () => {
+                if(xhr.readyState == 4 && xhr.status == 200) {
+                    resTextAres.value = xhr.responseText;
+                }
+            };
+            xhr.setRequestHeader('Authorization', `Bearer ${window.arasToken}`);
+            // xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
+            xhr.setRequestHeader('Content-type', 'application/json');
+            xhr.send();
+
+        });
+
+        
+    </script>
+</body>`
+</html>
